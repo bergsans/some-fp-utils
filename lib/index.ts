@@ -143,16 +143,16 @@ export function compose<T>(...fns: ((...xs: T[]) => T)[]): (...a: T[]) => T {
   return fns.reduceRight((f, g) => (...args): T => g(f(...args)));
 }
 
-export function map<T>(
-  fn: (x: T, i?: number, arr?: T[]) => T,
+export function map<T, U>(
+  fn: (x: T, i?: number, arr?: T[]) => U,
   list: T[]
-): T[] | ((a: T[]) => T[]) {
-  const _map = (_l: T[]) =>
+): U[] | ((a: T[]) => U[]) {
+  const _map = (_l: T[]): U[] =>
     _l.reduce(
-      (acc: T[], x: T, i: number, arr: T[]) => [...acc, fn(x, i, arr)],
+      (acc: U[], x: T, i: number, arr: T[]) => [...acc, fn(x, i, arr)],
       []
     );
-  return list === undefined ? (l: T[]): T[] => _map(l) : _map(list);
+  return list === undefined ? (l) => _map(l) : _map(list);
 }
 
 export function filter<T>(
