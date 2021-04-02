@@ -138,10 +138,10 @@ export function findIndex<T>(
 export const len = <T>(list: T[]): number =>
   list.reduce((listLength) => listLength + 1, 0);
 
-export function compose<T>(...fns: ((...xs: T[]) => T)[]): (...a: T[]) => T {
-  // | ((f: (a: T) => T) => (...a: T[]) => T) {
-  return fns.reduceRight((f, g) => (...args): T => g(f(...args)));
-}
+//export function compose<T>(...fns: ((...xs: T[]) => T)[]): (...a: T[]) => T {
+//  // | ((f: (a: T) => T) => (...a: T[]) => T) {
+//  return fns.reduceRight((f, g) => (...args): T => g(f(...args)));
+//}
 
 export function map<T, U>(
   fn: (x: T, i?: number, arr?: T[]) => U,
@@ -224,6 +224,10 @@ export const dropWhile = <T>(
   predicate: (x: T) => boolean,
   [head, ...tail]: T[]
 ): T[] => (predicate(head) ? dropWhile(predicate, tail) : [head, ...tail]);
+
+export const pluck = <T, U extends keyof T>(obj: T, k: U): T[U] => {
+  return obj[k];
+};
 
 export const trim = (str: string): string => str.trim();
 

@@ -4,7 +4,7 @@ import {
   apply,
   assoc,
   assocPath,
-  compose,
+  // compose,
   concat,
   dec,
   dissoc,
@@ -30,6 +30,7 @@ import {
   mult,
   not,
   once,
+  pluck,
   range,
   repeat,
   reverse,
@@ -152,14 +153,14 @@ const add1 = (x: number): number => x + 1;
 
 test('map', () => expect(str(map(add1, [1, 2, 3]))).toEqual(str([2, 3, 4])));
 
-expect(compose(add(1), add1, id, add(2))(3)).toEqual(7);
-test('compose', () => {
-  expect(compose(id, (s) => ({ ...s, b: 4 }), id)({ a: 3 })).toEqual({
-    a: 3,
-    b: 4
-  });
-  expect(str(compose(map(add1))([1, 2, 3]))).toEqual(str([2, 3, 4]));
-});
+//expect(compose(add(1), add1, id, add(2))(3)).toEqual(7);
+//test('compose', () => {
+//  expect(compose(id, (s) => ({ ...s, b: 4 }), id)({ a: 3 })).toEqual({
+//    a: 3,
+//    b: 4
+//  });
+//  expect(str(compose(map(add1))([1, 2, 3]))).toEqual(str([2, 3, 4]));
+//});
 
 test('some', () => {
   expect(some(isEven, [1, 1, 1])).toBe(false);
@@ -233,6 +234,8 @@ test('once', () => {
   newValue = add1ToValue(newValue);
   expect(newValue).toEqual(1);
 });
+
+test('pluck', () => expect(pluck({a: 1, b: 2}, 'a')).toBe(1));
 
 test('trim', () => expect(trim('  hello, world!  ')).toEqual('hello, world!'));
 
