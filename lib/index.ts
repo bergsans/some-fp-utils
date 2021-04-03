@@ -74,16 +74,15 @@ export const dissocPath = (
   return setValue(path, obj);
 };
 
-export function every<T>(
+export const every = <T>(
   fn: (x: T, i: number, arr: T[]) => boolean,
   list: T[]
-): boolean {
-  return list.reduce(
+): boolean =>
+  list.reduce(
     (isSomeElementTrue: boolean, element: T, i: number, arr: T[]): boolean =>
       !isSomeElementTrue ? false : fn(element, i, arr),
     true
   );
-}
 
 export const flatten = <T>(li: T[][]): T[] =>
   li.reduce((acc, v) => acc.concat(v), []);
@@ -98,9 +97,8 @@ export const id = <T>(x: T): T => x;
 
 export const inc = (x: number): number => x + 1;
 
-export function includes<T>(el: T, list: T[]): boolean {
-  return list.indexOf(el) >= 0 ? true : false;
-}
+export const includes = <T>(el: T, list: T[]): boolean =>
+  list.indexOf(el) >= 0 ? true : false;
 
 export const join = <T>(list: T[], delimiter = ''): string => {
   return list.reduce(
@@ -111,62 +109,53 @@ export const join = <T>(list: T[], delimiter = ''): string => {
 
 type NoContent = undefined;
 
-export function find<T>(
+export const find = <T>(
   fn: (x: T, i: number, arr: T[]) => boolean,
   list: T[]
-): T | NoContent {
-  return list.reduce(
+): T | NoContent =>
+  list.reduce(
     (firstFound: T | undefined, element: T, i: number, arr: T[]) =>
       !firstFound && fn(element, i, arr) ? element : firstFound,
     undefined
   );
-}
 
 type NotFound = -1;
 
-export function findIndex<T>(
+export const findIndex = <T>(
   fn: (x: T, i: number, arr: T[]) => boolean,
   list: T[]
-): number | NotFound {
-  return list.reduce(
+): number | NotFound =>
+  list.reduce(
     (firstFound: number, element: T, i: number, arr: T[]) =>
       firstFound === -1 && fn(element, i, arr) ? i : firstFound,
     -1
   );
-}
 
 export const len = <T>(list: T[]): number =>
   list.reduce((listLength) => listLength + 1, 0);
 
-//export function compose<T>(...fns: ((...xs: T[]) => T)[]): (...a: T[]) => T {
-//  // | ((f: (a: T) => T) => (...a: T[]) => T) {
-//  return fns.reduceRight((f, g) => (...args): T => g(f(...args)));
-//}
+type FnMap = <T, U>(x: T, i?: number, arr?: T[]) => U;
 
-export function map<T, U>(
-  fn: (x: T, i?: number, arr?: T[]) => U,
-  list: T[]
-): U[] | ((a: T[]) => U[]) {
-  const _map = (_l: T[]): U[] =>
-    _l.reduce(
-      (acc: U[], x: T, i: number, arr: T[]) => [...acc, fn(x, i, arr)],
-      []
-    );
-  return list === undefined ? (l) => _map(l) : _map(list);
-}
+const _map = <T, U>(fn: FnMap, _l: T[]): U[] =>
+  _l.reduce(
+    (acc: U[], x: T, i: number, arr: T[]): U[] => [...acc, fn(x, i, arr)],
+    []
+  );
 
-export function filter<T>(
-  fn: (x: T, i: number, arr: T[]) => boolean,
-  list: T[]
-): T[] | ((a: T[]) => T[]) {
-  const _filter = (li: T[]) =>
-    li.reduce(
-      (acc: T[], x: T, i: number, arr: T[]) =>
-        fn(x, i, arr) ? [...acc, x] : acc,
-      []
-    );
-  return list === undefined ? (l: T[]): T[] => _filter(l) : _filter(list);
-}
+export const map = <T, U>(fn: FnMap, list: T[]): U[] | ((l: T[]) => T[]) =>
+  !list ? (l) => _map(fn, l) : _map(fn, list);
+
+type FnFilter = <T>(x: T, i?: number, arr?: T[]) => T[];
+
+const _filter = <T>(fn: FnFilter, li: T[]): T[] =>
+  li.reduce(
+    (acc: T[], x: T, i: number, arr: T[]) =>
+      fn(x, i, arr) ? [...acc, x] : acc,
+    []
+  );
+
+export const filter = <T>(fn: FnFilter, list: T[]): T[] | ((a: T[]) => T[]) =>
+  !list === undefined ? (l: T[]): T[] => _filter(fn, l) : _filter(fn, list);
 
 export const reverse = <T>(input: string | T[]): string | T[] => {
   const _rev = <T>(inp: T[]) => inp.reduce((acc: T[], v: T) => [v, ...acc], []);
@@ -175,16 +164,15 @@ export const reverse = <T>(input: string | T[]): string | T[] => {
     : _rev(input);
 };
 
-export function some<T>(
+export const some = <T>(
   fn: (x: T, i: number, arr: T[]) => boolean,
   list: T[]
-): boolean {
-  return list.reduce(
-    (isSomeElementTrue: boolean, element: T, i: number, arr: T[]): boolean =>
-      !isSomeElementTrue ? fn(element, i, arr) : true,
+): boolean =>
+  list.reduce(
+    (isSomeElTrue: boolean, el: T, i: number, arr: T[]): boolean =>
+      !isSomeElTrue ? fn(el, i, arr) : true,
     false
   );
-}
 
 export const sum = (...ns: number[]): number =>
   ns.reduce((acc, v) => acc + v, 0);
@@ -229,9 +217,7 @@ export const dropWhile = <T>(
   [head, ...tail]: T[]
 ): T[] => (predicate(head) ? dropWhile(predicate, tail) : [head, ...tail]);
 
-export const pluck = <T, U extends keyof T>(obj: T, k: U): T[U] => {
-  return obj[k];
-};
+export const pluck = <T, U extends keyof T>(obj: T, k: U): T[U] => obj[k];
 
 export const trim = (str: string): string => str.trim();
 
