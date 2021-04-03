@@ -466,26 +466,22 @@ test('not', () => {
 const not = (el: boolean | 0 | 1): boolean => !el;
 ```
 
-##  once
-```javascript
-test('once', () => {
-  const add1ToValue = once(add1);
-  let newValue;
-  newValue = add1ToValue(0);
-  newValue = add1ToValue(newValue);
-  newValue = add1ToValue(newValue);
-  expect(newValue).toEqual(1);
-});
+## once
+```
 
-const once = <T>(fn: (a: T) => T): ((a: T) => T) => {
-  let isDone = false;
-  return (v: T): T => {
-    if (!isDone) {
-      isDone = true;
-      return fn(v);
-    }
-    return v;
+const once = <T, U>(fn: (...as: T[]) => U): ((...vs: T[]) => U) => {
+  let _v: U;
+  return (...args: T[]) => {
+    _v ||= fn(...args);
+    return _v;
   };
+};
+```
+
+## pluck
+```
+const pluck = <T, U extends keyof T>(obj: T, k: U): T[U] => {
+  return obj[k];
 };
 ```
 
@@ -512,8 +508,12 @@ const repeat = <T>(el: T, n: number): T[] =>
 ```javascript
 test('reverse', () => expect(str(reverse([1, 2, 3]))).toEqual(str([3, 2, 1])));
 
-const reverse = <T>(list: T[]): T[] =>
-  list.reduce((acc: T[], v: T) => [v, ...acc], []);
+const reverse = <T>(input: string | T[]): string | T[] => {
+  const _rev = <T>(inp: T[]) => inp.reduce((acc: T[], v: T) => [v, ...acc], []);
+  return typeof input === 'string'
+    ? _rev(input.split('')).join('')
+    : _rev(input);
+};
 ```
 
 ##  some
