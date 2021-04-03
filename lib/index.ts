@@ -168,8 +168,12 @@ export function filter<T>(
   return list === undefined ? (l: T[]): T[] => _filter(l) : _filter(list);
 }
 
-export const reverse = <T>(list: T[]): T[] =>
-  list.reduce((acc: T[], v: T) => [v, ...acc], []);
+export const reverse = <T>(input: string | T[]): string | T[] => {
+  const _rev = <T>(inp: T[]) => inp.reduce((acc: T[], v: T) => [v, ...acc], []);
+  return typeof input === 'string'
+    ? _rev(input.split('')).join('')
+    : _rev(input);
+};
 
 export function some<T>(
   fn: (x: T, i: number, arr: T[]) => boolean,

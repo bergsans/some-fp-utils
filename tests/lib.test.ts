@@ -174,7 +174,10 @@ test('every', () => {
 
 test('range', () => expect(str(range(2, 8))).toEqual(str([2, 3, 4, 5, 6, 7])));
 
-test('reverse', () => expect(str(reverse([1, 2, 3]))).toEqual(str([3, 2, 1])));
+test('reverse', () => {
+  expect(str(reverse([1, 2, 3]))).toEqual(str([3, 2, 1]));
+  expect(reverse('hello')).toEqual('olleh');
+});
 
 test('repeat', () => expect(str(repeat('*', 3))).toEqual(str(['*', '*', '*'])));
 
