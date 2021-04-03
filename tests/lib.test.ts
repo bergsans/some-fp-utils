@@ -236,9 +236,16 @@ test('once', () => {
   newValue = add1ToValue(newValue);
   newValue = add1ToValue(newValue);
   expect(newValue).toEqual(1);
+  const add1ToList = (l: number[]) => l.map(add1);
+  const add1ToListOnce = once(add1ToList);
+  let newArray;
+  newArray = add1ToListOnce([1, 2, 3]);
+  newArray = add1ToListOnce(newArray);
+  newArray = add1ToListOnce(newArray);
+  expect(str(newArray)).toEqual(str([2, 3, 4]));
 });
 
-test('pluck', () => expect(pluck({a: 1, b: 2}, 'a')).toBe(1));
+test('pluck', () => expect(pluck({ a: 1, b: 2 }, 'a')).toBe(1));
 
 test('trim', () => expect(trim('  hello, world!  ')).toEqual('hello, world!'));
 

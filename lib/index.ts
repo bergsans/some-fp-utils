@@ -237,13 +237,10 @@ export const trim = (str: string): string => str.trim();
 
 export const take = <T>(n: number, list: T[]): T[] => list.slice(0, n);
 
-export const once = <T>(fn: (a: T) => T): ((a: T) => T) => {
-  let isDone = false;
-  return (v: T): T => {
-    if (!isDone) {
-      isDone = true;
-      return fn(v);
-    }
-    return v;
+export const once = <T, U>(fn: (...as: T[]) => U): ((...vs: T[]) => U) => {
+  let _v: U;
+  return (...args: T[]) => {
+    _v ||= fn(...args);
+    return _v;
   };
 };
