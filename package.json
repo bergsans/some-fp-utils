@@ -7,7 +7,8 @@
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "lint": "eslint . --ext .ts",
     "test": "npx jest",
-    "watch-all": "npx test --watchAll"
+    "watch-all": "npx test --watchAll",
+    "compile": "npx tsc"
   },
   "devDependencies": {
     "@types/jest": "^26.0.22",
