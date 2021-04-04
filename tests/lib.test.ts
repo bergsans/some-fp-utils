@@ -19,6 +19,7 @@ import {
   find,
   findIndex,
   flatten,
+  foldr,
   foldl,
   head,
   id,
@@ -140,6 +141,21 @@ test('flatten', () => {
       [3, 4]
     ])
   );
+});
+
+test('foldr', () => {
+  expect(
+    foldr((a: number, b: number): number => a + b, 0, [1, 2, 3, 4, 5])
+  ).toEqual(15);
+  expect(
+    str(
+      foldr(
+        (acc: number[], v: number): number[] => [...acc, inc(v)],
+        [],
+        [1, 2, 3, 4, 5]
+      )
+    )
+  ).toEqual(str([6, 5, 4, 3, 2]));
 });
 
 test('foldl', () => {

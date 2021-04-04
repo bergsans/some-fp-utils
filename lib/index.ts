@@ -120,6 +120,20 @@ export const foldl = <T, U>(
   return result;
 };
 
+export const last = <T>(list: T[]): T => list[list.length - 1];
+
+export const foldr = <T, U>(
+  reducer: Reducer<U, T>,
+  result: U,
+  list: T[]
+): U => {
+  while (list.length) {
+    result = reducer(result, last(list));
+    list.pop();
+  }
+  return result;
+};
+
 export const tail = <T>(li: T[]): T[] | undefined =>
   li.length > 0 ? li.slice(1) : [];
 
