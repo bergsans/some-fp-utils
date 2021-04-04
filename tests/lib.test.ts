@@ -19,6 +19,7 @@ import {
   find,
   findIndex,
   flatten,
+  foldl,
   head,
   id,
   inc,
@@ -121,6 +122,28 @@ test('flatten', () => {
       [3, 4]
     ])
   );
+});
+
+test('foldl', () => {
+  expect(
+    foldl((a: number, b: number): number => a + b, 0, [1, 2, 3, 4, 5])
+  ).toEqual(15);
+  expect(
+    foldl(
+      (acc: number[], v: number): number[] => [...acc, inc(v)],
+      [],
+      [1, 2, 3, 4, 5]
+    )
+  ).toEqual([2, 3, 4, 5, 6]);
+  expect(
+    foldl(
+      (acc: { answer: number }, v: number): { answer: number } => ({
+        answer: acc.answer + v
+      }),
+      { answer: 0 },
+      [1, 2, 3]
+    )
+  ).toEqual({ answer: 6 });
 });
 
 test('head', () => expect(head(['a', 'b'])).toEqual('a'));

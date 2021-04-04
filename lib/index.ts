@@ -87,8 +87,21 @@ export const every = <T>(
 export const flatten = <T>(li: T[][]): T[] =>
   li.reduce((acc, v) => acc.concat(v), []);
 
-export const head = <T>(li: T[]): T | undefined =>
-  li.length > 0 ? li[0] : undefined;
+type Reducer<U, T> = (acc: U, next: T) => U;
+
+export const head = <T>(li: T[]): T => li[0];
+
+export const foldl = <T, U>(
+  reducer: Reducer<U, T>,
+  result: U,
+  list: T[]
+): U => {
+  while (list.length) {
+    result = reducer(result, head(list));
+    list.shift();
+  }
+  return result;
+};
 
 export const tail = <T>(li: T[]): T[] | undefined =>
   li.length > 0 ? li.slice(1) : [];
