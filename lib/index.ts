@@ -164,16 +164,26 @@ export const findIndex = <T>(
 export const len = <T>(list: T[]): number =>
   list.reduce((listLength) => listLength + 1, 0);
 
-export const map = <T, U>(
-  fn: (x: T, i?: number, arr?: T[]) => U,
-  list?: T[]
-): U[] | ((l: T[]) => U[]) => {
+//export const map = <T, U>(
+//  fn: (x: T, i?: number, arr?: T[]) => U,
+//  list?: T[]
+//): U[] | ((l: T[]) => U[]) => {
+//  const _map = <T, U>(fn: (x: T, i?: number, arr?: T[]) => U, _l: T[]): U[] =>
+//    _l.reduce(
+//      (acc: U[], x: T, i: number, arr: T[]): U[] => [...acc, fn(x, i, arr)],
+//      []
+//    );
+//  return !list ? (l: T[]): U[] => _map(fn, l) : _map(fn, list);
+//};
+export const map = <T, U>(fn: (x: T, i?: number, arr?: T[]) => U) => (
+  list: T[]
+): U[] => {
   const _map = <T, U>(fn: (x: T, i?: number, arr?: T[]) => U, _l: T[]): U[] =>
     _l.reduce(
       (acc: U[], x: T, i: number, arr: T[]): U[] => [...acc, fn(x, i, arr)],
       []
     );
-  return !list ? (l: T[]): U[] => _map(fn, l) : _map(fn, list);
+  return _map(fn, list);
 };
 
 export const filter = <T>(

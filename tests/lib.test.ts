@@ -91,12 +91,6 @@ test('apply', () => expect(apply(Math.max, [1, 2, 3])).toBe(3));
 test('compose', () => {
   expect(compose(inc, inc, inc)(10)).toEqual(13);
   expect(compose(add(20), add(10))(10)).toEqual(40);
-  const incNumbersInList = (x: number[]) => map(inc, x);
-  expect(compose(incNumbersInList, incNumbersInList)([1, 2, 3])).toEqual([
-    3,
-    4,
-    5
-  ]);
   //should not warn:
   expect(compose(map(inc), map(inc))([1, 2, 3])).toEqual([3, 4, 5]);
   // warns corretly:
@@ -199,8 +193,8 @@ test('len', () => expect(len([1, 2, 3])).toEqual(3));
 const add1 = (x: number): number => x + 1;
 
 test('map', () => {
-  expect(str(map(add(10), [1, 2, 3]))).toEqual(str([11, 12, 13]));
-  expect(str(map(add1, [1, 2, 3]))).toEqual(str([2, 3, 4]));
+  expect(str(map(add(10))([1, 2, 3]))).toEqual(str([11, 12, 13]));
+  expect(str(map(add1)([1, 2, 3]))).toEqual(str([2, 3, 4]));
 });
 
 test('some', () => {
