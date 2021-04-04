@@ -39,6 +39,23 @@ export const assocPath = <T>(path: string[]) => (
   return setValue(path, obj);
 };
 
+export const compose = <T1, T2, T3, T4, T5, T6>(
+  fn1: (a: T1) => T2,
+  fn2?: (a: T2) => T3,
+  fn3?: (a: T3) => T4,
+  fn4?: (a: T4) => T5,
+  fn5?: (a: T5) => T6
+) => {
+  // @ts-ignore
+  const fns = Array.from(arguments).filter((f) => f !== undefined);
+  return function (data: T1) {
+    for (const fn of fns.reverse()) {
+      data = fn(data);
+    }
+    return data;
+  };
+};
+
 export const concat = <T>(list1: T[], list2: T[]): T[] => [...list1, ...list2];
 
 export const dec = (x: number): number => x - 1;
@@ -147,28 +164,35 @@ export const findIndex = <T>(
 export const len = <T>(list: T[]): number =>
   list.reduce((listLength) => listLength + 1, 0);
 
-type FnMap = <T, U>(x: T, i?: number, arr?: T[]) => U;
+export const map = <T, U>(
+  fn: (x: T, i?: number, arr?: T[]) => U,
+  list?: T[]
+): U[] | ((l: T[]) => U[]) => {
+  const _map = <T, U>(fn: (x: T, i?: number, arr?: T[]) => U, _l: T[]): U[] =>
+    _l.reduce(
+      (acc: U[], x: T, i: number, arr: T[]): U[] => [...acc, fn(x, i, arr)],
+      []
+    );
+  return !list ? (l: T[]): U[] => _map(fn, l) : _map(fn, list);
+};
 
-const _map = <T, U>(fn: FnMap, _l: T[]): U[] =>
-  _l.reduce(
-    (acc: U[], x: T, i: number, arr: T[]): U[] => [...acc, fn(x, i, arr)],
-    []
-  );
-
-export const map = <T, U>(fn: FnMap, list: T[]): U[] | ((l: T[]) => T[]) =>
-  !list ? (l) => _map(fn, l) : _map(fn, list);
-
-type FnFilter = <T>(x: T, i?: number, arr?: T[]) => T[];
-
-const _filter = <T>(fn: FnFilter, li: T[]): T[] =>
-  li.reduce(
-    (acc: T[], x: T, i: number, arr: T[]) =>
-      fn(x, i, arr) ? [...acc, x] : acc,
-    []
-  );
-
-export const filter = <T>(fn: FnFilter, list: T[]): T[] | ((a: T[]) => T[]) =>
-  !list === undefined ? (l: T[]): T[] => _filter(fn, l) : _filter(fn, list);
+export const filter = <T>(
+  fn: (x: T, i?: number, arr?: T[]) => boolean,
+  list: T[]
+): T[] | ((a: T[]) => T[]) => {
+  const _filter = <T>(
+    fn: (x: T, i?: number, arr?: T[]) => boolean,
+    li: T[]
+  ): T[] =>
+    li.reduce(
+      (acc: T[], x: T, i: number, arr: T[]) =>
+        fn(x, i, arr) ? [...acc, x] : acc,
+      []
+    );
+  return !list === undefined
+    ? (l: T[]): T[] => _filter(fn, l)
+    : _filter(fn, list);
+};
 
 export const reverse = <T>(input: string | T[]): string | T[] => {
   const _rev = <T>(inp: T[]) => inp.reduce((acc: T[], v: T) => [v, ...acc], []);

@@ -4,8 +4,8 @@ import {
   apply,
   assoc,
   assocPath,
-  // compose,
   concat,
+  compose,
   dec,
   dissoc,
   dissocPath,
@@ -87,6 +87,30 @@ test('assocPath', () => {
 test('append', () => expect(str(append([1, 2], 3))).toBe(str([1, 2, 3])));
 
 test('apply', () => expect(apply(Math.max, [1, 2, 3])).toBe(3));
+
+test('compose', () => {
+  expect(compose(inc, inc, inc)(10)).toEqual(13);
+  expect(compose(add(20), add(10))(10)).toEqual(40);
+  const incNumbersInList = (x: number[]) => map(inc, x);
+  expect(compose(incNumbersInList, incNumbersInList)([1, 2, 3])).toEqual([
+    3,
+    4,
+    5
+  ]);
+  //should not warn:
+  expect(compose(map(inc), map(inc))([1, 2, 3])).toEqual([3, 4, 5]);
+  // warns corretly:
+  // expect(compose(inc, (x: string) => x + 'a', inc)(10)).toEqual(10);
+  expect(
+    compose(
+      (pos: { x: number; y: number }) => ({ ...pos, x: pos.x + 1 }),
+      (pos: { x: number; y: number }) => ({ ...pos, x: pos.x + 10 })
+    )({
+      x: 1,
+      y: 1
+    })
+  ).toEqual({ x: 12, y: 1 });
+});
 
 test('concat', () => {
   expect(str(concat([1, 2], [3, 4]))).toEqual(str([1, 2, 3, 4]));
@@ -174,16 +198,10 @@ test('len', () => expect(len([1, 2, 3])).toEqual(3));
 
 const add1 = (x: number): number => x + 1;
 
-test('map', () => expect(str(map(add1, [1, 2, 3]))).toEqual(str([2, 3, 4])));
-
-//expect(compose(add(1), add1, id, add(2))(3)).toEqual(7);
-//test('compose', () => {
-//  expect(compose(id, (s) => ({ ...s, b: 4 }), id)({ a: 3 })).toEqual({
-//    a: 3,
-//    b: 4
-//  });
-//  expect(str(compose(map(add1))([1, 2, 3]))).toEqual(str([2, 3, 4]));
-//});
+test('map', () => {
+  expect(str(map(add(10), [1, 2, 3]))).toEqual(str([11, 12, 13]));
+  expect(str(map(add1, [1, 2, 3]))).toEqual(str([2, 3, 4]));
+});
 
 test('some', () => {
   expect(some(isEven, [1, 1, 1])).toBe(false);
